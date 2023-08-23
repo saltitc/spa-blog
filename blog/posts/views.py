@@ -12,7 +12,7 @@ class PostListView(ListView):
         In GET: Returns the main page of the site with a list of recent posts
 
         Template: index.html
-        """
+    """
     template_name = 'posts/index.html'
     model = Post
     context_object_name = "posts"
@@ -20,7 +20,12 @@ class PostListView(ListView):
 
 
 class PostDetailView(DetailView):
+    """
+        DetailView with detailed descriptions of posts
+
+        In GET: Returns a page with a detailed description of the post
+
+        Template: post_detail.html
+    """
     template_name = 'posts/post_detail.html'
     model = Post
-
-
