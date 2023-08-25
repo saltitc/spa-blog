@@ -1,0 +1,37 @@
+{% extends 'posts/base.html' %}
+{% load static %}
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+    <div class="text-center">
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <form class="form-signin" method="post" action="{% url 'users:registration' %}">
+            {% csrf_token %}
+            <h1 class="h3 mb-3 mt-3 font-weight-normal">Регистрация</h1>
+            <label for="{{ form.username.id_for_label }}" class="sr-only">Имя пользователя</label>
+            {{ form.username }}
+            <label for="{{ form.email.id_for_label}}" class="sr-only">Адрес электронной почты</label>
+            {{ form.email }}
+            <label for="{{ form.password1.id_for_label }}"  class="sr-only">Пароль</label>
+            {{ form.password1 }}
+            <label for="{{ form.password2.id_for_label }}" class="sr-only">Повторите пароль</label>
+            {{ form.password2 }}
+            <label for="{{ form.gender.id_for_label }}" class="sr-only"></label>
+            {{ form.gender }}
+            <button class="btn mt-2 btn-lg btn-primary btn-block" type="submit">Регистрация</button>
+        </form>
+    </div>
+{% endblock %}
