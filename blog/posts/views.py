@@ -1,7 +1,10 @@
+from django.core.paginator import Paginator
 from django.http import Http404
+from django.shortcuts import render
+from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic import DetailView
-
+from django.db.models import Q
 from .models import Post
 
 
@@ -29,3 +32,21 @@ class PostDetailView(DetailView):
     """
     template_name = 'posts/post_detail.html'
     model = Post
+
+
+class SearchResultsView(View):
+    def get(self, request, *args, **kwargs):
+        query = self.request.GET.get('q')
+        results = ""
+        if query:
+            results = Post.objects.filter(
+                Q(title__icontains=query) | Q(content__icontains=query)
+            )
+        paginator = Paginator(results, 6)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        return render(request, 'posts/search.html', context={
+            'title': 'Поиск',
+            'results': page_obj,
+            'count': paginator.count
+        })
