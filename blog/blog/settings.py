@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'posts',
     'users',
 
+    'taggit',
     'ckeditor',
     'ckeditor_uploader'
 ]

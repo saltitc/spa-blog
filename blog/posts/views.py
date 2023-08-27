@@ -1,11 +1,12 @@
 from django.core.paginator import Paginator
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic import DetailView
 from django.db.models import Q
 from .models import Post
+from taggit.models import Tag
 
 
 class PostListView(ListView):
@@ -33,6 +34,12 @@ class PostDetailView(DetailView):
     template_name = 'posts/post_detail.html'
     model = Post
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['common_tags'] = Post.tag.most_common()
+        context['last_posts'] = Post.objects.exclude(slug=self.object.slug)[:5]
+        return context
+
 
 class SearchResultsView(View):
     def get(self, request, *args, **kwargs):
@@ -49,4 +56,16 @@ class SearchResultsView(View):
             'title': 'Поиск',
             'results': page_obj,
             'count': paginator.count
+        })
+
+
+class TagView(View):
+    def get(self, request, slug, *args, **kwargs):
+        tag = get_object_or_404(Tag, slug=slug)
+        posts = Post.objects.filter(tag=tag)
+        common_tags = Post.tag.most_common()
+        return render(request, 'posts/tag.html', context={
+            'title': f'#ТЕГ {tag}',
+            'posts': posts,
+            'common_tags': common_tags
         })
