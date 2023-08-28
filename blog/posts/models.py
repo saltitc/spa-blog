@@ -1,7 +1,8 @@
-from django.db import models
-from users.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.db import models
 from taggit.managers import TaggableManager
+
+from users.models import User
 
 
 class Post(models.Model):
@@ -19,13 +20,13 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    username = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_name')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+    username = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_name")
     text = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-created_date']
+        ordering = ["-created_date"]
 
     def __str__(self):
         return self.text
